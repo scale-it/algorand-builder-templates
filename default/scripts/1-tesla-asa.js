@@ -11,25 +11,25 @@ async function run(runtimeEnv, deployer) {
   console.log('[tesla]: Script has started execution!');
 
   const masterAccount = deployer.accountsByName.get('master-account');
-  const elon = deployer.accountsByName.get('elon-musk');
+  const alice = deployer.accountsByName.get('alice');
   const john = deployer.accountsByName.get('john');
 
   await executeTransaction(
     deployer,
-    mkParam(masterAccount, elon.addr, 40e6, { note: 'funding account' })
+    mkParam(masterAccount, alice.addr, 40e6, { note: 'funding account' })
   );
   await executeTransaction(
     deployer,
     mkParam(masterAccount, john.addr, 40e6, { note: 'funding account' })
   );
 
-  const asaInfo = await deployer.deployASA('tesla', { creator: elon });
+  const asaInfo = await deployer.deployASA('tesla', { creator: alice });
   console.log(asaInfo);
 
   await deployer.optInAcountToASA(asaInfo.assetIndex, 'john', {});
 
   const assetID = asaInfo.assetIndex;
-  await balanceOf(deployer, elon.addr, assetID);
+  await balanceOf(deployer, alice.addr, assetID);
 
   console.log('[tesla]: Script execution has finished!');
 }

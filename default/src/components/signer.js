@@ -163,7 +163,6 @@ const SendASA = () => {
   const [isDialogOpen, setDialog] = useState(false);
   const [selectedASAName, setSelectedASAName] = useState(''); // selected ASA (one of deployed asa's OR other)
   const [selectedASAIndex, setSelectedASAIndex] = useState('');
-  const [accounts, setAccounts] = useState([]); // algosigner accounts
   const [fromAddress, setFromAddress] = useState(''); // from account (one of algosigner.accounts)
 
   // state to handle toasts and loading state
@@ -179,9 +178,16 @@ const SendASA = () => {
         ledger: CHAIN_NAME,
       })) ?? [];
 
-    setAccounts(algoSignerAccts.map(acc => acc.address));
     if (algoSignerAccts.length) {
+      // TODO: update fromAddress to current active account in https://www.pivotaltracker.com/story/show/178760753
       setFromAddress(algoSignerAccts[0].address); // set first account as default selected
+    } else {
+      const errMsg =
+        'No account found in wallet. Please create or import an existing account in algosigner wallet';
+      setMessage(errMsg);
+      setIsErr(true);
+      setResult(errMsg);
+      setDialog(false); // close modal
     }
   });
 
@@ -314,26 +320,16 @@ const SendASA = () => {
               </Grid>
             </Grid>
 
-            <FormControl
+            <TextField
+              id="SenderAddr"
+              label="Sender's Account Address"
               variant="outlined"
-              margin="dense"
+              color="secondary"
+              margin="normal"
               fullWidth
-              style={{ marginTop: '5%' }}
-            >
-              <InputLabel id="select-asa">Sender Account Address</InputLabel>
-              <Select
-                id="senderAddr"
-                label="Sender's Account Address"
-                value={fromAddress}
-                onChange={e => setFromAddress(e.target.value)}
-              >
-                {accounts.map(addr => (
-                  <MenuItem value={addr} key={addr}>
-                    {addr}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+              value={fromAddress} // currently this is just algosigner.accounts[0]
+              disabled
+            />
 
             <TextField
               id="receiverAddr"
