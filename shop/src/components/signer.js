@@ -7,6 +7,7 @@ import React from 'react';
 import { useCallback, useState } from 'react';
 
 import { CHAIN_NAME } from '../algosigner.config';
+import { PaymentWidget } from './payment-widget';
 
 const ExampleAlgoSigner = ({ title, buttonText, buttonAction }) => {
   const [result, setResult] = useState('');
@@ -38,23 +39,6 @@ const ExampleAlgoSigner = ({ title, buttonText, buttonAction }) => {
   );
 };
 
-const CheckAlgoSigner = () => {
-  const action = useCallback(() => {
-    if (typeof AlgoSigner !== 'undefined') {
-      return 'AlgoSigner is installed.';
-    }
-    return 'AlgoSigner is NOT installed.';
-  }, []);
-
-  return (
-    <ExampleAlgoSigner
-      title="Check if algosigner is installed"
-      buttonText="Check"
-      buttonAction={action}
-    />
-  );
-};
-
 const Connect = () => {
   const action = useCallback(async () => {
     try {
@@ -76,12 +60,30 @@ const Connect = () => {
   );
 };
 
+const Ticket = ({ title, buttonText, amount }) => {
+  return (
+    <div className="algoSigner">
+      <Typography variant="h5">{title}</Typography>
+      <PaymentWidget buttonText={buttonText} amount={amount} />
+    </div>
+  );
+};
+
 export default function Signer() {
   return (
     <Container>
       <CssBaseline />
-      <CheckAlgoSigner />
       <Connect />
+      <Ticket
+        title="Queen concert ticket"
+        buttonText="Buy (5 ALGO)"
+        amount={5}
+      />
+      <Ticket
+        title="Beyonce concert ticket"
+        buttonText="Buy (10 ALGO)"
+        amount={10}
+      />
     </Container>
   );
 }
@@ -96,4 +98,16 @@ ExampleAlgoSigner.defaultProps = {
   title: '',
   buttonText: '',
   buttonAction: null,
+};
+
+Ticket.propTypes = {
+  title: PropTypes.string,
+  buttonText: PropTypes.string,
+  amount: PropTypes.number,
+};
+
+Ticket.defaultProps = {
+  title: '',
+  buttonText: '',
+  amount: -1,
 };

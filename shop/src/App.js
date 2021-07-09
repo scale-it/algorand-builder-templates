@@ -9,10 +9,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Typography variant="h4">
-          {' '}
-          Simple React App Using AlgoSigner{' '}
-        </Typography>
+        <Typography variant="h4"> Buy Concert tickets </Typography>
         <Signer />
       </header>
     </div>
